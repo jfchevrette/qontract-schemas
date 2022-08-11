@@ -913,6 +913,54 @@ confs:
       schema: /aws/policy-1.yml
       subAttr: account
 
+- name: CloudflareAccount_v1
+  interface: ExternalResourcesProvisioner_v1
+  fields:
+  - { name: schema, type: string, isRequired: true }
+  - { name: path, type: string, isRequired: true }
+  - { name: name, type: string, isRequired: true, isUnique: true, isSearchable: true }
+  - { name: description, type: string }
+  - { name: providerVersion, type: string, isRequired: true }
+  - { name: accountOwners, type: Owner_v1, isList: true, isRequired: true }
+  - { name: enableDeletion, type: boolean }
+  - { name: apiCredentials, type: VaultSecret_v1, isRequired: true }
+  - { name: terraformStateAccount, type: AWSAccount_v1, isRequired: true }
+
+- name: CloudflareZone_v1
+  fields:
+  - { name: account, type: CloudflareAccount_v1, isRequired: true }
+  - { name: name, type: string, isRequired: true }
+  - { name: plan, type: string }
+  - { name: type, type: string }
+  - { name: settings, type: json }
+
+- name: CloudflareRecord_v1
+  fields:
+  - { name: zone, type: CloudflareZone_v1, isRequired: true }
+  - { name: name, type: string, isRequired: true }
+  - { name: type, type: string, isRequired: true }
+  - { name: ttl, type: int, isRequired: true }
+  - { name: value, type: string, isRequired: true }
+  - { name: proxied, type: boolean }
+
+- name: CloudflareWorker_v1
+  fields:
+  - { name: zone, type: CloudflareZone_v1, isRequired: true }
+  - { name: name, type: string, isRequired: true }
+  - { name: pattern, type: string, isRequired: true }
+  - { name: script, type: CloudflareWorkerScript_v1, isRequired: true }
+
+- name: CloudflareWorkerScript_v1
+  fields:
+  - { name: name, type: string, isRequired: true }
+  - { name: content_from_github, type: CloudflareWorkerScriptContentFromGithub_v1, isRequired: true }
+
+- name: CloudflareWorkerScriptContentFromGithub_v1
+  fields:
+  - { name: repo, type: string, isRequired: true }
+  - { name: path, type: string, isRequired: true }
+  - { name: ref, type: string, isRequired: true }
+
 - name: AWSGroup_v1
   fields:
   - { name: schema, type: string, isRequired: true }
@@ -1100,6 +1148,7 @@ confs:
     field: provider
     fieldMap:
       aws: NamespaceTerraformProviderResourceAWS_v1
+      cloudflare: NamespaceTerraformProviderResourceCloudflare_v1
       gcp-project: NamespaceTerraformProviderResourceGCPProject_v1
   fields:
   - { name: provider, type: string, isRequired: true }
@@ -2570,6 +2619,10 @@ confs:
   - { name: awsgroups_v1, type: AWSGroup_v1, isList: true, datafileSchema: /aws/group-1.yml }
   - { name: awsaccounts_v1, type: AWSAccount_v1, isList: true, datafileSchema: /aws/account-1.yml }
   - { name: clusters_v1, type: Cluster_v1, isList: true, datafileSchema: /openshift/cluster-1.yml }
+  - { name: cloudflare_accounts_v1, type: CloudflareAccount_v1, isList: true, datafileSchema: /cloudflare/account-1.yml }
+  - { name: cloudflare_zones_v1, type: CloudflareZone_v1, isList: true, datafileSchema: /cloudflare/zone-1.yml }
+  - { name: cloudflare_records_v1, type: CloudflareRecord_v1, isList: true, datafileSchema: /cloudflare/record-1.yml }
+  - { name: cloudflare_workers_v1, type: CloudflareWorker_v1, isList: true, datafileSchema: /cloudflare/worker-1.yml }
   - { name: jumphosts_v1, type: ClusterJumpHost_v1, isList: true, datafileSchema: /openshift/jump-host-1.yml }
   - { name: kafka_clusters_v1, type: KafkaCluster_v1, isList: true, datafileSchema: /kafka/cluster-1.yml }
   - { name: namespaces_v1, type: Namespace_v1, isList: true, datafileSchema: /openshift/namespace-1.yml }

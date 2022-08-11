@@ -1,0 +1,48 @@
+---
+"$schema": /metaschema-1.json
+version: '1.0'
+type: object
+
+additionalProperties: false
+properties:
+  "$schema":
+    type: string
+    enum:
+    - /cloudflare/worker-1.yml
+  zone:
+    "$ref": "/common-1.json#/definitions/crossref"
+    "$schemaRef": "/cloudflare/zone-1.yml"
+  name:
+    type: string
+  pattern:
+    type: string
+  script:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      content_from_github:
+        type: object
+        additionalProperties: false
+        properties:
+          repo:
+            type: string
+          path:
+            type: string
+          ref:
+            type: string
+            pattern: '^([0-9a-f]{40}|master|main|internal|quayio)$'
+        required:
+        - repo
+        - path
+        - ref
+    required:
+    - name
+    - content_from_github
+required:
+- "$schema"
+- zone
+- name
+- pattern
+- script

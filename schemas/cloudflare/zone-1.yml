@@ -1,0 +1,33 @@
+---
+"$schema": /metaschema-1.json
+version: '1.0'
+type: object
+
+additionalProperties: false
+properties:
+  "$schema":
+    type: string
+    enum:
+    - /cloudflare/zone-1.yml
+  account:
+    "$ref": "/common-1.json#/definitions/crossref"
+    "$schemaRef": "/cloudflare/account-1.yml"
+  name:
+    type: string
+  plan:
+    enum:
+    - enterprise
+    - free
+  type:
+    enum:
+    - full
+    - partial
+  settings:
+    type: object
+required:
+- "$schema"
+- account
+- name
+- plan
+- type
+- settings

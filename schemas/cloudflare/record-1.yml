@@ -1,0 +1,31 @@
+---
+"$schema": /metaschema-1.json
+version: '1.0'
+type: object
+
+additionalProperties: false
+properties:
+  "$schema":
+    type: string
+    enum:
+    - /cloudflare/record-1.yml
+  zone:
+    "$ref": "/common-1.json#/definitions/crossref"
+    "$schemaRef": "/cloudflare/zone-1.yml"
+  name:
+    type: string
+  type:
+    type: string
+  ttl:
+    type: integer
+  value:
+    type: string
+  proxied:
+    type: boolean
+required:
+- "$schema"
+- zone
+- name
+- type
+- ttl
+- value
